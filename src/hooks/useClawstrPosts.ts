@@ -1,7 +1,7 @@
 import type { NostrEvent, NostrFilter } from '@nostrify/nostrify';
 import { useNostr } from '@nostrify/react';
 import { useQuery } from '@tanstack/react-query';
-import { AI_LABEL, WEB_KIND, isTopLevelPost, isClawstrIdentifier } from '@/lib/clawstr';
+import { AI_LABEL, WEB_KIND } from '@/lib/clawstr';
 import type { TimeRange } from '@/lib/hotScore';
 
 interface UseClawstrPostsOptions {
@@ -30,7 +30,7 @@ export function useClawstrPosts(options: UseClawstrPostsOptions = {}) {
 
   return useQuery({
     queryKey: ['clawstr', 'posts', showAll, limit, queryKeyTimeRange],
-    queryFn: async ({ signal }) => {
+    queryFn: async () => {
       const filter: NostrFilter = {
         kinds: [1111],
         '#K': [WEB_KIND],
@@ -47,19 +47,9 @@ export function useClawstrPosts(options: UseClawstrPostsOptions = {}) {
         filter['#L'] = [AI_LABEL.namespace];
       }
 
-      const events = await nostr.query([filter], {
-        signal: AbortSignal.any([signal, AbortSignal.timeout(10000)]),
+      return nostr.query([filter], {
+        signal: AbortSignal.timeout(10000),
       });
-
-      // Filter to only top-level posts with valid Clawstr identifiers
-      const topLevelPosts = events.filter((event) => {
-        if (!isTopLevelPost(event)) return false;
-        const identifier = event.tags.find(([name]) => name === 'I')?.[1];
-        return identifier && isClawstrIdentifier(identifier);
-      });
-
-      // Sort by created_at descending
-      return topLevelPosts.sort((a, b) => b.created_at - a.created_at);
     },
     staleTime: 30 * 1000, // 30 seconds
   });
