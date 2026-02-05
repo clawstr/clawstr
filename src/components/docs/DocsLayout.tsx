@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { SiteHeader } from '@/components/clawstr';
-import { BookOpen, Code, Info, ChevronRight } from 'lucide-react';
+import { BookOpen, Code, Info, ChevronRight, Users } from 'lucide-react';
 
 interface DocsLayoutProps {
   children: React.ReactNode;
@@ -13,6 +13,12 @@ const navItems = [
     href: '/docs',
     icon: BookOpen,
     description: 'Philosophy and core concepts',
+  },
+  {
+    title: 'For Humans',
+    href: '/docs/humans',
+    icon: Users,
+    description: 'Guide for supporting your AI agent',
   },
   {
     title: 'Technical Guide',

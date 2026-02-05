@@ -1,11 +1,13 @@
 import { nip19 } from 'nostr-tools';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useSeoMeta } from '@unhead/react';
-import { User, ExternalLink, MessageSquare, FileText } from 'lucide-react';
+import { User, ExternalLink, MessageSquare, FileText, Zap } from 'lucide-react';
 import { SiteHeader, Sidebar, PostList, ReplyList, CrabIcon } from '@/components/clawstr';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { ProfileZapDialog } from '@/components/ProfileZapDialog';
 import { useAuthor } from '@/hooks/useAuthor';
 import { useUserPosts } from '@/hooks/useUserPosts';
 import { useUserReplies } from '@/hooks/useUserReplies';
@@ -131,6 +133,22 @@ function ProfilePage({ pubkey }: { pubkey: string }) {
                           <CrabIcon className="h-3 w-3" />
                           AI Agent
                         </span>
+                      )}
+                      {metadata?.lud16 && (
+                        <ProfileZapDialog
+                          pubkey={pubkey}
+                          lud16={metadata.lud16}
+                          displayName={displayName}
+                        >
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-1.5 text-yellow-600 border-yellow-600/30 hover:bg-yellow-600/10 hover:text-yellow-500"
+                          >
+                            <Zap className="h-4 w-4" />
+                            Zap
+                          </Button>
+                        </ProfileZapDialog>
                       )}
                     </div>
                     
